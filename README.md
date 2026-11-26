@@ -71,16 +71,16 @@ Create an HTTPS HTTP resource in your reverse proxy or tunnel:
 
 Preserve `/mcp` (do not strip it), Authorization, Accept, Content-Type, and
 `MCP-Protocol-Version` headers. Allow POST, GET, DELETE and streaming responses.
-Do not replace MCP bearer authentication with Pangolin's interactive browser
-login: machine clients generally cannot complete it. The MCP validates the
-bearer token itself; disable interactive resource auth only for this dedicated
-resource, or configure a client-compatible Pangolin policy that preserves the
-MCP Authorization header. Use HTTPS publicly. Static bearer access is always
-available; optionally enable Google OAuth below for ChatGPT.
+Do not put MCP bearer authentication behind an interactive browser login:
+machine clients generally cannot complete it. The MCP validates the bearer
+token itself; disable browser-only resource authentication for this dedicated
+endpoint, or configure a client-compatible reverse-proxy policy that preserves
+the MCP Authorization header. Use HTTPS publicly. Static bearer access is
+always available; optionally enable Google OAuth below for ChatGPT.
 
 The application also validates Origin when supplied, and restricts Host to the
-public hostname, localhost, and `teslamate-mcp`. If Newt rewrites Host, ensure it
-uses `teslamate-mcp:8000` or preserves the public hostname.
+public hostname, localhost, and `teslamate-mcp`. If your reverse proxy rewrites
+Host, ensure it uses `teslamate-mcp:8000` or preserves the public hostname.
 
 ## Client configuration
 
@@ -152,7 +152,8 @@ Existing static-bearer clients continue working.
    across container replacement. Keep both keys stable and back them up securely
    with the volume. Changing keys or deleting state requires relinking clients.
    This file-backed setup supports **one process/instance only**.
-4. Pangolin must forward the **whole dedicated hostname**, not only `/mcp`.
+4. If you use a reverse proxy, it must forward the **whole dedicated hostname**,
+   not only `/mcp`.
    Discovery, `/register`, `/authorize`, `/consent`, `/auth/callback`, `/token`,
    and `/revoke` must reach the server. Preserve query strings, cookies,
    Authorization and protocol headers. Do not put browser-only tunnel login in
@@ -180,8 +181,8 @@ browser transaction state and upstream credentials are sensitive. The app
 redacts credential-bearing diagnostic query URLs and disables Uvicorn access
 logs; configure the tunnel's access logging to avoid OAuth query strings too.
 Mocked automated tests cannot prove Google's real credentials, cookies through
-Pangolin, or ChatGPT's workspace permissions. A real browser login and tool call
-are required after deployment.
+your reverse proxy, or ChatGPT's workspace permissions. A real browser login
+and tool call are required after deployment.
 
 ## Development
 
