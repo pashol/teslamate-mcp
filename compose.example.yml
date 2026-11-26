@@ -1,0 +1,32 @@
+# Merge this service into the existing tesla compose.yml.
+# Standalone use creates a separate network: join the API network explicitly in that case.
+services:
+  teslamate-mcp:
+    image: teslamate-mcp:local
+    build:
+      context: .
+    restart: unless-stopped
+    environment:
+      MCP_BEARER_TOKEN: ${MCP_BEARER_TOKEN:?Set a strong distinct MCP bearer token}
+      MCP_ALLOWED_ORIGINS: ${MCP_ALLOWED_ORIGINS:?Set exact HTTPS origins for browser requests}
+      TESLAMATE_API_URL: http://teslamateapi:8080
+      TESLAMATE_API_TOKEN: ${TESLAMATE_API_TOKEN:-}
+      TESLAMATE_API_TOKEN_HEADER: ${TESLAMATE_API_TOKEN_HEADER:-Authorization}
+    expose:
+      - "8000"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 100
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3).read()"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3

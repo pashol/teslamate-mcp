@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "teslamate-mcp"
+version = "0.1.0"
+description = "Read-only TeslaMateAPI MCP server"
+requires-python = ">=3.12"
+dependencies = [
+    "mcp==1.30.0",
+    "httpx==0.28.1",
+    "uvicorn==0.54.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest==9.2.0", "pytest-asyncio==1.5.0", "PyYAML==6.0.4"]
+oauth = ["fastmcp==3.4.11", "cryptography==50.0.2", "py-key-value-aio[filetree]==0.4.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]

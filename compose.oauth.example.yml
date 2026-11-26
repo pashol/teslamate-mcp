@@ -1,0 +1,21 @@
+# Explicit opt-in only:
+# docker compose -f compose.example.yml -f compose.oauth.example.yml up -d --build
+# For an existing Tesla stack, merge only these additions into its MCP service.
+services:
+  teslamate-mcp:
+    build:
+      args:
+        INSTALL_OAUTH: "true"
+    environment:
+      MCP_GOOGLE_CLIENT_ID: ${MCP_GOOGLE_CLIENT_ID:-}
+      MCP_GOOGLE_CLIENT_SECRET: ${MCP_GOOGLE_CLIENT_SECRET:-}
+      MCP_GOOGLE_ALLOWED_EMAILS: ${MCP_GOOGLE_ALLOWED_EMAILS:-}
+      MCP_OAUTH_BASE_URL: ${MCP_OAUTH_BASE_URL:-}
+      MCP_OAUTH_SIGNING_KEY: ${MCP_OAUTH_SIGNING_KEY:-}
+      MCP_OAUTH_STORAGE_KEY: ${MCP_OAUTH_STORAGE_KEY:-}
+      MCP_OAUTH_STORAGE_DIR: ${MCP_OAUTH_STORAGE_DIR:-}
+    volumes:
+      - teslamate_mcp_oauth:/var/lib/teslamate-mcp
+
+volumes:
+  teslamate_mcp_oauth:

@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.env
+*.env
+!.env.example
+.superpowers/
+
+# Local deployment records and working notes must not enter the public repository.
+/docs/deployment.md
+/docs/progress.md
+/docs/setup.md
+/docs/superpowers/
