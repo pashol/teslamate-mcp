@@ -12,5 +12,4 @@ dist/
 # Local deployment records and working notes must not enter the public repository.
 /docs/deployment.md
 /docs/progress.md
-/docs/setup.md
 /docs/superpowers/
